@@ -1,2 +1,12 @@
-# SpotiFind
-Need some new music? Want to recommend music to people? Lets go
+# Spotifind
+
+Spotifind is a Python project that analyzes and recommends Spotify playlists using the Spotify API.
+
+## Features
+- Fetch and analyze Spotify playlists
+- Generate personalized music recommendations
+
+## Setup
+1. Clone the repository.
+2. Set up a virtual environment (`python3 -m venv venv`).
+3. Install dependencies (`pip install spotipy`).
