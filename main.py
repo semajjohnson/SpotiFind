@@ -11,8 +11,7 @@ sp = spotipy.Spotify(auth_manager=SpotifyOAuth(
     client_id=os.getenv("SPOTIPY_CLIENT_ID"),  # Retrieved from your .env file
     client_secret=os.getenv("SPOTIPY_CLIENT_SECRET"),
     redirect_uri="http://localhost:8888/callback",  # Must match your Spotify app settings
-    scope="playlist-read-private playlist-read-collaborative playlist-modify-public "
-          "playlist-modify-private user-library-read user-read-recently-played user-top-read"
+    scope="user-top-read user-read-recently-played"
 ))
 # Test API Call: Fetch the current user's playlists
 def fetch_playlists():
@@ -24,8 +23,62 @@ def fetch_playlists():
     except Exception as e:
         print(f"Error: {e}")
 
+#user profile data function
+def fetch_my_user():
+    try:
+        user_data = sp.me()
+
+        user_id = user_data.get('id', 'N/A')  # Fallback to 'N/A' if 'id' isn't present
+        display_name = user_data.get('display_name', 'N/A')
+        email = user_data.get('email', 'No email available')
+
+        print(f"User ID: {user_id}")     
+        print(f"Display Name: {display_name}")   
+        print(f"Email: {email}")
+    except Exception as e:
+        print("An error occurred:", e)
+
+def fetch_top_tracks():
+    top_tracks = sp.current_user_top_tracks(limit=10, time_range="medium_term")
+    print("Your Top Tracks:")
+    for idx, item in enumerate(top_tracks['items']):
+        print(f"{idx + 1}: {item['name']} by {item['artists'][0]['name']}")
+    return top_tracks    
+
+def fetch_top_artists():
+    top_artists = sp.current_user_top_artists(limit=10, time_range="medium_term")
+    print("\n" + "Your Top Artist:")
+    for idx, artist in enumerate(top_artists['items']):
+        print(f"{idx + 1}: {artist['name']}")
+    return top_artists
+
+def fetch_recently_played():
+    recently_played = sp.current_user_recently_played(limit=10)
+    print("\n" + "Recently Played Tracks:")
+    for idx, item in enumerate(recently_played['items']):
+        track = item['track']
+        print(f"{idx + 1}: {track['name']} by {track['artists'][0]['name']} (played at {item['played_at']})")
+    return recently_played 
+
+def get_user_data():
+    # Fetch data
+    top_tracks = fetch_top_tracks()
+    top_artists = fetch_top_artists()
+    recently_played = fetch_recently_played()
+    
+    # Structure data for SQL
+    user_data = {
+        "top_tracks": [(track['name'], track['artists'][0]['name']) for track in top_tracks['items']],
+        "top_artists": [artist['name'] for artist in top_artists['items']],
+        "recently_played": [(item['track']['name'], item['track']['artists'][0]['name'], item['played_at']) for item in recently_played['items']]
+    }
+    print("\n")
+    return user_data       
+
 # Run the test function
 if __name__ == "__main__":
-    fetch_playlists()
+    user_data = get_user_data()
+    print("User Data Retrieved:")
+    print(user_data)
 
-print("done")    
+print("done") 
