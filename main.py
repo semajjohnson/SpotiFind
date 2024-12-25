@@ -37,7 +37,7 @@ def fetch_my_user():
     except Exception as e:
         print("An error occurred:", e)
 
-def fetch_top_tracks(limit = 20):
+def fetch_top_tracks():
     try:
         top_tracks = sp.current_user_top_tracks(limit=20, time_range="medium_term")
         print("Your Top Tracks:")
@@ -46,8 +46,6 @@ def fetch_top_tracks(limit = 20):
         return top_tracks
     except Exception as e:
         print("An error occurred:", e)   
-
-top_tracks = fetch_top_tracks() 
 
 def fetch_top_artists():
     try:  
@@ -70,7 +68,7 @@ def fetch_recently_played():
     except Exception as e:
         print("An error occurred:", e)
 
-def fetch_top_genres():
+def fetch_top_genres(top_tracks):
     try:
         # Collect genres based on top tracks
         genres = set()  # using a set to avoid duplicates
@@ -83,6 +81,8 @@ def fetch_top_genres():
         print("Top Genres:")
         for genre in genres:
             print(genre)
+
+        return list(genres)    
     except Exception as e:
         print("An error occurred:", e)    
 
@@ -103,7 +103,35 @@ def get_user_data():
         "top_genres": [genre for artist in top_artists['items'] for genre in artist['genres']]
     }
     print("\n")
-    return user_data       
+    return user_data      
+def fetch_top_tracks_data(limit=20):
+    try:
+        top_tracks = sp.current_user_top_tracks(limit=limit, time_range="medium_term")
+        # Return only the raw track data
+        return top_tracks
+    except Exception as e:
+        print("An error occurred while fetching top tracks data:", e)
+        return None
+def fetch_top_artists_data(limit=20):
+    try:
+        top_artists = sp.current_user_top_artists(limit=limit, time_range="medium_term")
+        # Return only the raw artist data
+        return top_artists
+    except Exception as e:
+        print("An error occurred while fetching top artists data:", e)
+        return None
+
+from visualization import create_collage, create_genre_pie_chart
+top_tracks = fetch_top_tracks_data(limit=20)
+top_artists = fetch_top_artists_data(limit=20)
+# Example for top tracks collage
+top_track_images = [track['album']['images'][0]['url'] for track in top_tracks['items']]
+create_collage(top_track_images)
+
+# Example for genre pie chart
+genres = [genre for artist in top_artists['items'] for genre in artist['genres']]
+create_genre_pie_chart(genres)
+
 
 # Run the test function
 if __name__ == "__main__":
