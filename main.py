@@ -120,17 +120,36 @@ def fetch_top_artists_data(limit=20):
     except Exception as e:
         print("An error occurred while fetching top artists data:", e)
         return None
-
+    
 from visualization import create_collage, create_genre_pie_chart
 top_tracks = fetch_top_tracks_data(limit=20)
 top_artists = fetch_top_artists_data(limit=20)
+
 # Example for top tracks collage
-top_track_images = [track['album']['images'][0]['url'] for track in top_tracks['items']]
-create_collage(top_track_images)
+#top_track_images = [track['album']['images'][0]['url'] for track in top_tracks['items']]
+#create_collage(top_track_images)
 
 # Example for genre pie chart
 genres = [genre for artist in top_artists['items'] for genre in artist['genres']]
 create_genre_pie_chart(genres)
+
+def fetch_top_artist_images(limit=20):
+    try:
+        top_artists = sp.current_user_top_artists(limit=limit, time_range="medium_term")
+        # Extract artist image URLs
+        artist_images = [artist['images'][0]['url'] for artist in top_artists['items'] if artist['images']]
+        return artist_images
+    except Exception as e:
+        print("An error occurred while fetching top artist images:", e)
+        return []
+    
+# Fetch top artist images
+artist_images = fetch_top_artist_images(limit=20)
+# Generate collage for top artists
+if artist_images:
+    create_collage(artist_images, "top_artists_collage.png")
+else:
+    print("No artist images available for collage.")
 
 
 # Run the test function

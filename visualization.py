@@ -29,6 +29,9 @@ def create_collage(image_urls, collage_name="assets/top_tracks_collage.jpg", siz
     print(f"Collage saved as {collage_name}")
 
 # Function to create a genre pie chart
+import matplotlib.pyplot as plt
+from adjustText import adjust_text
+
 def create_genre_pie_chart(genres, file_name="assets/top_genres_pie_chart.png"):
     genre_counts = {}
     for genre in genres:
@@ -37,9 +40,13 @@ def create_genre_pie_chart(genres, file_name="assets/top_genres_pie_chart.png"):
     labels = list(genre_counts.keys())
     sizes = list(genre_counts.values())
 
-    plt.figure(figsize=(8, 8))
-    plt.pie(sizes, labels=labels, autopct="%1.1f%%", startangle=140)
+    plt.figure(figsize=(10, 10))  # Increase the chart size to 10x10 inches
+    wedges, texts, autotexts = plt.pie(sizes, labels=labels, autopct="%1.1f%%", startangle=200, textprops={'rotation': 45})
+    
+    for text in texts:
+        text.set_rotation(0)  # Rotate the labels to 45 degrees
+
     plt.title("Top Genres")
-    plt.savefig(file_name)
+    plt.savefig(file_name, bbox_inches='tight')
     plt.show()
     print(f"Pie chart saved as {file_name}")
