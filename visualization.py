@@ -2,6 +2,8 @@ from PIL import Image
 import requests
 from io import BytesIO
 import matplotlib.pyplot as plt
+from matplotlib.colors import to_rgba
+
 
 # Function to create a collage
 def create_collage(image_urls, collage_name="assets/top_tracks_collage.jpg", size=(500, 500)):
@@ -40,13 +42,38 @@ def create_genre_pie_chart(genres, file_name="assets/top_genres_pie_chart.png"):
     labels = list(genre_counts.keys())
     sizes = list(genre_counts.values())
 
-    plt.figure(figsize=(10, 10))  # Increase the chart size to 10x10 inches
-    wedges, texts, autotexts = plt.pie(sizes, labels=labels, autopct="%1.1f%%", startangle=200, textprops={'rotation': 45})
-    
-    for text in texts:
-        text.set_rotation(0)  # Rotate the labels to 45 degrees
+    # Define dark-themed colors
+    colors = [
+        to_rgba("darkslateblue", alpha=0.8),
+        to_rgba("mediumpurple", alpha=0.8),
+        to_rgba("rebeccapurple", alpha=0.8),
+        to_rgba("black", alpha=0.8),
+        to_rgba("dimgray", alpha=0.8)
+    ]
 
-    plt.title("Top Genres")
-    plt.savefig(file_name, bbox_inches='tight')
+    # Ensure the color list matches the number of slices
+    colors = colors * (len(sizes) // len(colors) + 1)  # Repeat colors if necessary
+
+    # Create the pie chart
+    plt.figure(figsize=(10, 10), facecolor="black")
+    wedges, texts, autotexts = plt.pie(
+        sizes,
+        labels=labels,
+        autopct="%1.1f%%",
+        startangle=140,
+        colors=colors[:len(sizes)],
+        textprops={"color": "white"}
+    )
+
+    # Customize the text appearance
+    for text in texts:
+        text.set_color("white")
+    for autotext in autotexts:
+        autotext.set_color("white")
+        autotext.set_fontsize(12)
+
+    # Title and save
+    plt.title("Top Genres", color="white", fontsize=16)
+    plt.savefig(file_name, bbox_inches="tight", facecolor="black")
     plt.show()
     print(f"Pie chart saved as {file_name}")
