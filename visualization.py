@@ -3,6 +3,7 @@ import requests
 from io import BytesIO
 import matplotlib.pyplot as plt
 from matplotlib.colors import to_rgba
+from pyfonts import load_font
 
 
 # Function to create a collage
@@ -64,13 +65,21 @@ def create_genre_pie_chart(genres, file_name="assets/top_genres_pie_chart.png"):
         colors=colors[:len(sizes)],
         textprops={"color": "white"}
     )
-
     # Customize the text appearance
     for text in texts:
         text.set_color("white")
     for autotext in autotexts:
         autotext.set_color("white")
         autotext.set_fontsize(12)
+    font = load_font(
+    font_url="https://github.com/google/fonts/blob/main/apache/ultra/Ultra-Regular.ttf?raw=true"
+)    
+    plt.title(
+        "Top Genres", 
+        color="white", 
+        fontsize=30, 
+        font=font
+    )    
 
     # Title and save
     plt.title("Top Genres", color="white", fontsize=16)
