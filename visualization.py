@@ -33,7 +33,6 @@ def create_collage(image_urls, collage_name="assets/top_tracks_collage.jpg", siz
 
 # Function to create a genre pie chart
 import matplotlib.pyplot as plt
-from adjustText import adjust_text
 
 def create_genre_pie_chart(genres, file_name="assets/top_genres_pie_chart.png"):
     genre_counts = {}
