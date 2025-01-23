@@ -4,7 +4,7 @@ Spotifind is a Python project that analyzes and recommends Spotify playlists usi
 
 ## Features
 - Fetch and analyze Spotify playlists
-- Generate personalized music recommendations
+- Generate personalized music recommendations of underground / up-n-coming artists
 
 ## Setup
 1. Clone the repository.
