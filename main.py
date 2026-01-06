@@ -7,9 +7,9 @@ load_dotenv()
 
 #authenticate app with spotipy
 sp = spotipy.Spotify(auth_manager=SpotifyOAuth(
-    client_id=os.getenv("SPOTIPY_CLIENT_ID"),  # Retrieved from your .env file
+    client_id=os.getenv("SPOTIPY_CLIENT_ID"),
     client_secret=os.getenv("SPOTIPY_CLIENT_SECRET"),
-    redirect_uri="http://localhost:8888/callback",  # Must match your Spotify app settings
+    redirect_uri=os.getenv("SPOTIPY_REDIRECT_URI"),  # Must match your Spotify app settings
     scope="user-top-read user-read-recently-played"
 ))
 # Test API Call: Fetch the current user's playlists
